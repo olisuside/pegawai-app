@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::resource('pegawais', PegawaiController::class);
+Route::post('pegawais', [PegawaiController::class, 'store'])->name('pegawai.store');
