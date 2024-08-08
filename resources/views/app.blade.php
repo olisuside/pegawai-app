@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @vite('resources/css/app.css')
+    
 
 </head>
 
@@ -16,7 +17,8 @@
             <div class="mx-3  mt-0 mb-4 flex md:flex-row flex-col justify-between">
 
                 <h1 class="text-3xl font-bold ">Data Pegawai</h1>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Tambah
+                <button id="openModal"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Tambah
                     Pegawai</button>
             </div>
             <div class="">
@@ -69,8 +71,84 @@
         </div>
     </div>
 
+    {{-- Modal --}}
+    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 ">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Tambah Pegawai</h3>
+                <div class="mt-2 px-7 py-3">
+                    <form id="addPegawaiForm">
+                        <div class="mb-4">
+                            <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                            <input type="text" id="nama" name="nama"
+                                class="mt-1 p-1 border border-gray-300 rounded-md w-full" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="posisi" class="block text-sm font-medium text-gray-700">Posisi</label>
+                        
+                            <select id="posisi" name="posisi" style="width: 100%; height: 30px !important;"  required>
+                                <option value="manager">Manager</option>
+                                <option value="staff">Staff</option>
+                                <option value="magang">Magang</option>
+                            </select>
+                       
+
+                        </div>
+                        <div class="mb-4">
+                            <label for="tanggalMasuk" class="block text-sm font-medium text-gray-700">Tanggal
+                                Masuk</label>
+                            <input type="date" id="tanggalMasuk" name="tanggalMasuk"
+                                class="mt-1 p-1 border border-gray-300 rounded-md w-full" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="foto" class="block text-sm font-medium text-gray-700">Foto</label>
+                            <input type="file" id="foto" name="foto"
+                                class="mt-1 p-1 border border-gray-300 rounded-md w-full">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" id="closeModal"
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg mr-2">Close</button>
+                            <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
     <script>
+        $(document).ready(function() {
+            $('#posisi').select2({
+                height: '30px !important',
+            });
+        });
+    </script>
+    <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
+            const openModalButton = document.getElementById('openModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const modal = document.getElementById('modal');
+
+            openModalButton.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+            });
+
+            closeModalButton.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+
+
             const pegawaiData = @json($pegawais); //fetch ddata
             const entriesPerPageSelect = document.getElementById('entriesPerPage');
             const searchInput = document.getElementById('searchInput');
